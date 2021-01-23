@@ -2,18 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title></title>
+  <style>
+      body {
+          background-color: darkgrey;
+      }
+      .center {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+      }
+  </style>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.4.0/gl-matrix-min.js"></script>
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript">
       // variáveis global
-      var mMatrix = mat4.create();
-      var vMatrix = mat4.create();
-      var pMatrix = mat4.create();
+      let mMatrix = mat4.create();
+      let vMatrix = mat4.create();
+      let pMatrix = mat4.create();
 
-      var triangleVertexPositionBuffer;
-      var triangleVertexColorBuffer;
-      var squareVertexPositionBuffer;
-      var squareVertexColorBuffer;
+      let triangleVertexPositionBuffer;
+      let triangleVertexColorBuffer;
+      let squareVertexPositionBuffer;
+      let squareVertexColorBuffer;
 
       // Iniciar o ambiente quando a página for carregada
       $(function () {
@@ -21,7 +33,7 @@
       });
 
       function iniciaWebGL() {
-          var canvas = $('#canvas-webgl')[0];
+          let canvas = $('#canvas-webgl')[0];
           iniciarGL(canvas); // Definir como um canvas 3D
           iniciarShaders();  // Obter e processar os Shaders
           iniciarBuffers();  // Enviar o triângulo e quadrado na GPU
@@ -41,11 +53,11 @@
           }
       }
 
-      var shaderProgram;
+      let shaderProgram;
 
       function iniciarShaders() {
-          var vertexShader = getShader(gl, "#shader-vs");
-          var fragmentShader = getShader(gl, "#shader-fs");
+          let vertexShader = getShader(gl, "#shader-vs");
+          let fragmentShader = getShader(gl, "#shader-fs");
 
           shaderProgram = gl.createProgram();
           gl.attachShader(shaderProgram, vertexShader);
@@ -70,23 +82,23 @@
       }
 
       function getShader(gl, id) {
-          var shaderScript = $(id)[0];
+          let shaderScript = $(id)[0];
           if (!shaderScript) {
               return null;
           }
 
-          var str = "";
-          var k = shaderScript.firstChild;
+          let str = "";
+          let k = shaderScript.firstChild;
           while (k) {
-              if (k.nodeType == 3)
+              if (k.nodeType === 3)
                   str += k.textContent;
               k = k.nextSibling;
           }
 
-          var shader;
-          if (shaderScript.type == "x-shader/x-fragment") {
+          let shader;
+          if (shaderScript.type === "x-shader/x-fragment") {
               shader = gl.createShader(gl.FRAGMENT_SHADER);
-          } else if (shaderScript.type == "x-shader/x-vertex") {
+          } else if (shaderScript.type === "x-shader/x-vertex") {
               shader = gl.createShader(gl.VERTEX_SHADER);
           } else {
               return null;
@@ -106,7 +118,7 @@
       function iniciarBuffers() {
           triangleVertexPositionBuffer = gl.createBuffer();
           gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
-          var vertices = [
+          let vertices = [
               0.0, 1.0, 0.0,
               -1.0, -1.0, 0.0,
               1.0, -1.0, 0.0
@@ -117,7 +129,7 @@
 
           triangleVertexColorBuffer = gl.createBuffer();
           gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexColorBuffer);
-          var cores = [
+          let cores = [
               1.0, 0.0, 0.0, 1.0,
               0.0, 1.0, 0.0, 1.0,
               0.0, 0.0, 1.0, 1.0
@@ -141,7 +153,7 @@
           squareVertexColorBuffer = gl.createBuffer();
           gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexColorBuffer);
           cores = []
-          for (var i=0; i < 4; i++) {
+          for (let i=0; i < 4; i++) {
               cores = cores.concat([0.5, 0.5, 1.0, 1.0]);
           }
           gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cores), gl.STATIC_DRAW);
@@ -214,10 +226,12 @@
   </script>
 </head>
 <body>
-<canvas id="canvas-webgl"
-        width="500px"
-        height="500px"
-        style="border:none">
-</canvas>
+<div class="center">
+  <canvas id="canvas-webgl"
+          width="500px"
+          height="500px"
+          style="border:none">
+  </canvas>
+</div>
 </body>
 </html>
