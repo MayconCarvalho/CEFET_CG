@@ -1,7 +1,9 @@
-## Welcome to GitHub Pages
+## Tutorial - WebGL Prático
 
-Link do primeiro para a [lição 01](tutorial/licao01.html).
+Link para Prática 02 CG: [Criando polígonos](tutorial/licao01.html)
 
-Imagem escolhida para reproduzir:
+## Imagem
 
-![imagem](./images.jpeg)
+Imagem escolhida para a fase 1:
+
+![imagem](img/fase-1.jpeg)
