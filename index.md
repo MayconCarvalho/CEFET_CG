@@ -6,6 +6,6 @@
 
 ## Imagem
 
-Imagem escolhida para a fase 1:
+Imagem escolhida de inspiração para Fase 1:
 
-![imagem](img/fase-1.jpeg)
+![imagem pre-1](pre-1.jpg)

@@ -1,6 +1,6 @@
 # CEFET MG - Eng. de computação - Computação Gráfica
 Repositório para os trabalhos da disciplina de Computação Gráfica
 
-Imagem geométrica que pretendo construir:
+Imagem escolhida de inspiração para a Fase 1:
 
-![Imagem](img/fase-1.jpeg)
+![Imagem pre-1](pre-1.jpg)
