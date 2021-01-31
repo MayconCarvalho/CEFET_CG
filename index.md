@@ -3,6 +3,7 @@
 1. Link para Prática 02 CG: [Criando polígonos](tutorial/licao01.html)  
 2. Link para Prática 03 CG: [Adicionando Cores](tutorial/licao02.html)  
 3. Link para Prática 04 CG: [Movimentando objetos](tutorial/licao03.html)
+4. Link para Prática 05 CG: [Desenhando em 3D](tutorial/licao04.html)
 
 ## Imagem
 
