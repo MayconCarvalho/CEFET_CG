@@ -4,6 +4,7 @@
 2. Link para Prática 03 CG: [Adicionando Cores](tutorial/licao02.html)  
 3. Link para Prática 04 CG: [Movimentando objetos](tutorial/licao03.html)
 4. Link para Prática 05 CG: [Desenhando em 3D](tutorial/licao04.html)
+5. Link para Prática 06 CG: [Texturas](tutorial/licao05.html)
 
 ## Imagem
 
