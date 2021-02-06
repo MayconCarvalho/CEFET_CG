@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <style>
+      body {
+          background-color: darkgrey;
+      }
+      .center {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+      }
+  </style>
+  <script type="text/javascript" src="../../libs/gl-matrix-min.js"></script>
+  <script type="text/javascript" src="../../libs/jquery.min.js"></script>
+  <script type="text/javascript" src="../../libs/webgl-utils.js"></script>
+  <script type="text/javascript" src="scripts.js"></script>
+  <script id="shader-vs" type="x-shader/x-vertex">
+      attribute vec3 aVertexPosition;
+      attribute vec4 aVertexColor;
+
+      uniform mat4 uMMatrix;
+      uniform mat4 uVMatrix;
+      uniform mat4 uPMatrix;
+
+      varying vec4 vColor;
+
+      void main(void){
+	        gl_Position = uPMatrix * uVMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
+	        vColor = aVertexColor;
+      }
+  </script>
+  <script id="shader-fs" type="x-shader/x-fragment">
+      precision mediump float;
+      varying vec4 vColor;
+
+      void main(void) {
+	      gl_FragColor = vColor;
+      }
+  </script>
+</head>
+<body>
+  <div class="center">
+    <canvas id="canvas-webgl"
+            width="500px"
+            height="500px"
+            style="border:none">
+    </canvas>
+  </div>
+</body>
+</html>
