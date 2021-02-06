@@ -3,9 +3,6 @@ let mMatrix = mat4.create();
 let vMatrix = mat4.create();
 let pMatrix = mat4.create();
 
-// pilha
-let mMatrixPilha = [];
-
 // aloca memória na GPU no qual podemos jogar os dados dos objetos 3D
 let shaderProgram;
 
@@ -315,20 +312,6 @@ function tratarTextura(textura) {
     // deve escolher alguns texels para serem mostrados
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
     gl.bindTexture(gl.TEXTURE_2D, null);
-}
-
-// copia a matriz atual model e guarda na pilha
-function mPushMatrix() {
-    let copy = mat4.clone(mMatrix);
-    mMatrixPilha.push(copy);
-}
-
-// retorna a matriz guardada no topo da pilha para a mMatriz
-function mPopMatrix() {
-    if (mMatrixPilha.length === 0) {
-        throw "inválido popMatrix!";
-    }
-    mMatrix = mMatrixPilha.pop();
 }
 
 let ultimo = 0;
