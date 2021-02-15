@@ -19,20 +19,25 @@
   <script type="text/javascript" src="scripts.js"></script>
   <script id="shader-vs" type="x-shader/x-vertex">
       attribute vec3 aVertexPosition;
+      attribute vec4 aVertexColor;
 
       uniform mat4 uMMatrix;
       uniform mat4 uVMatrix;
       uniform mat4 uPMatrix;
 
+      varying vec4 vColor;
+
       void main(void){
 	        gl_Position = uPMatrix * uVMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
+	        vColor = aVertexColor;
       }
   </script>
   <script id="shader-fs" type="x-shader/x-fragment">
       precision mediump float;
+      varying vec4 vColor;
 
       void main(void) {
-	      gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+	      gl_FragColor = vColor;
       }
   </script>
 </head>

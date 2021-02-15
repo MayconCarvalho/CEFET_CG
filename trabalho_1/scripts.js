@@ -1,14 +1,28 @@
-// variáveis global
+// Matrizes de model view position
 let mMatrix = mat4.create();
 let vMatrix = mat4.create();
 let pMatrix = mat4.create();
 
+// triangulo topo
 let triangleTopVertexPositionBuffer;
-let triangleBottomLeftVertexPositionBuffer;
-let triangleBottomRightVertexPositionBuffer;
-let triangleFireVertexPositionBuffer;
-let squareVertexPositionBuffer;
+let triangleTopVertexColorBuffer;
 
+// triangulo asa esquerda
+let triangleBottomLeftVertexPositionBuffer;
+let triangleBottomLeftVertexColorBuffer;
+
+// triangulo asa direita
+let triangleBottomRightVertexPositionBuffer;
+let triangleBottomRightVertexColorBuffer;
+
+// triangulo fogo
+let triangleFireVertexPositionBuffer;
+
+// quadrado corpo do foguete
+let squareVertexPositionBuffer;
+let squareVertexColorBuffer;
+
+// shader
 let shaderProgram;
 
 // Iniciar o ambiente quando a página for carregada
@@ -55,6 +69,9 @@ function iniciarShaders() {
     shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
     gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
 
+    shaderProgram.vertexColorAttribute = gl.getAttribLocation(shaderProgram, "aVertexColor");
+    gl.enableVertexAttribArray(shaderProgram.vertexColorAttribute);
+
     shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
     shaderProgram.vMatrixUniform = gl.getUniformLocation(shaderProgram, "uVMatrix");
     shaderProgram.mMatrixUniform = gl.getUniformLocation(shaderProgram, "uMMatrix");
@@ -95,7 +112,7 @@ function getShader(gl, id) {
 }
 
 function iniciarBuffers() {
-    // triangulo do topo
+    // triangulo do topo vertices
     triangleTopVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, triangleTopVertexPositionBuffer);
     let vertices = [
@@ -107,7 +124,19 @@ function iniciarBuffers() {
     triangleTopVertexPositionBuffer.itemSize = 3;
     triangleTopVertexPositionBuffer.numItems = 3;
 
-    // quadrado do corpo
+    // triangulo do topo cores
+    triangleTopVertexColorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, triangleTopVertexColorBuffer);
+    let cores = [
+        1.0, 1.0, 0.0, 1.0,
+        1.0, 1.0, 0.0, 1.0,
+        1.0, 1.0, 0.0, 1.0
+    ];
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cores), gl.STATIC_DRAW);
+    triangleTopVertexColorBuffer.itemSize = 4;
+    triangleTopVertexColorBuffer.numItems = 3;
+
+    // quadrado do corpo vertices
     squareVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
     vertices = [
@@ -120,7 +149,18 @@ function iniciarBuffers() {
     squareVertexPositionBuffer.itemSize = 3;
     squareVertexPositionBuffer.numItems = 4;
 
-    // triangulo asa esquerda
+    // quadrado do corpo cores
+    squareVertexColorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexColorBuffer);
+    cores = []
+    for (let i = 0; i < 4; i++) {
+        cores = cores.concat([0.0, 0.0, 1.0, 1.0]);
+    }
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cores), gl.STATIC_DRAW);
+    squareVertexColorBuffer.itemSize = 4;
+    squareVertexColorBuffer.numItems = 4;
+
+    // triangulo asa esquerda vertices
     triangleBottomLeftVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, triangleBottomLeftVertexPositionBuffer);
     vertices = [
@@ -132,7 +172,19 @@ function iniciarBuffers() {
     triangleBottomLeftVertexPositionBuffer.itemSize = 3;
     triangleBottomLeftVertexPositionBuffer.numItems = 3;
 
-    // triangulo asa direita
+    // triangulo asa esquerda cores
+    triangleBottomLeftVertexColorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, triangleBottomLeftVertexColorBuffer);
+    cores = [
+        1.0, 0.0, 0.0, 1.0,
+        1.0, 0.0, 0.0, 1.0,
+        1.0, 0.0, 0.0, 1.0
+    ];
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cores), gl.STATIC_DRAW);
+    triangleBottomLeftVertexColorBuffer.itemSize = 4;
+    triangleBottomLeftVertexColorBuffer.numItems = 3;
+
+    // triangulo asa direita vertices
     triangleBottomRightVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, triangleBottomRightVertexPositionBuffer);
     vertices = [
@@ -144,7 +196,19 @@ function iniciarBuffers() {
     triangleBottomRightVertexPositionBuffer.itemSize = 3;
     triangleBottomRightVertexPositionBuffer.numItems = 3;
 
-    // triangulo dos fogos
+    // triangulo asa direita cores
+    triangleBottomRightVertexColorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, triangleBottomRightVertexColorBuffer);
+    cores = [
+        1.0, 0.0, 0.0, 1.0,
+        1.0, 0.0, 0.0, 1.0,
+        1.0, 0.0, 0.0, 1.0
+    ];
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cores), gl.STATIC_DRAW);
+    triangleBottomRightVertexColorBuffer.itemSize = 4;
+    triangleBottomRightVertexColorBuffer.numItems = 3;
+
+    // triangulo dos fogos vertices
     triangleFireVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, triangleFireVertexPositionBuffer);
     vertices = [
@@ -155,10 +219,6 @@ function iniciarBuffers() {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
     triangleFireVertexPositionBuffer.itemSize = 3;
     triangleFireVertexPositionBuffer.numItems = 3;
-}
-
-function radian(degree) {
-    return degree * (Math.PI / 180);
 }
 
 function iniciarAmbiente() {
@@ -176,9 +236,17 @@ function desenharCena() {
     let translation = vec3.create();
     vec3.set(translation, 0, 3.2, -7.0);
     mat4.translate(mMatrix, mMatrix, translation);
+
+    // triangulo topo vertices
     gl.bindBuffer(gl.ARRAY_BUFFER, triangleTopVertexPositionBuffer);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,
         triangleTopVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    // triangulo topo cores
+    gl.bindBuffer(gl.ARRAY_BUFFER, triangleTopVertexColorBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute,
+        triangleTopVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
     setMatrixUniforms();
     gl.drawArrays(gl.TRIANGLES, 0, triangleTopVertexPositionBuffer.numItems);
 
@@ -186,9 +254,17 @@ function desenharCena() {
     for (let i = 0; i < 2; i++) {
         vec3.set(translation, 0.0, -2.1, 0.0);
         mat4.translate(mMatrix, mMatrix, translation);
+
+        // corpo do foguete vertices
         gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,
             squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        // corpo do foguete cores
+        gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexColorBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexColorAttribute,
+            squareVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
         setMatrixUniforms();
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
     }
@@ -196,18 +272,34 @@ function desenharCena() {
     // desenhando a asa esquerda do foguete
     vec3.set(translation, -2.1, 0, 0.0);
     mat4.translate(mMatrix, mMatrix, translation);
+
+    // asa esquerda do foguete vertices
     gl.bindBuffer(gl.ARRAY_BUFFER, triangleBottomLeftVertexPositionBuffer);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,
         triangleBottomLeftVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    // asa esquerda do foguete cores
+    gl.bindBuffer(gl.ARRAY_BUFFER, triangleBottomLeftVertexColorBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute,
+        triangleBottomLeftVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
     setMatrixUniforms();
     gl.drawArrays(gl.TRIANGLES, 0, triangleBottomLeftVertexPositionBuffer.numItems);
 
     // desenhando a asa direita do foguete
     vec3.set(translation, 3.7, 0, 0.0);
     mat4.translate(mMatrix, mMatrix, translation);
+
+    // asa direita do foguete vertices
     gl.bindBuffer(gl.ARRAY_BUFFER, triangleBottomRightVertexPositionBuffer);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,
         triangleBottomRightVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    // asa direita do foguete vertices
+    gl.bindBuffer(gl.ARRAY_BUFFER, triangleBottomRightVertexColorBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute,
+        triangleBottomRightVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
     setMatrixUniforms();
     gl.drawArrays(gl.TRIANGLES, 0, triangleBottomRightVertexPositionBuffer.numItems);
 
@@ -217,9 +309,12 @@ function desenharCena() {
     for (let i = 0; i < 4; i++) {
         vec3.set(translation, 0.6, 0, 0.0);
         mat4.translate(mMatrix, mMatrix, translation);
+
+        // fogo do foguete vertices
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleFireVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,
             triangleFireVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
         setMatrixUniforms();
         gl.drawArrays(gl.TRIANGLES, 0, triangleFireVertexPositionBuffer.numItems);
     }
