@@ -3,6 +3,14 @@ let mMatrix = mat4.create();
 let vMatrix = mat4.create();
 let pMatrix = mat4.create();
 
+// pilha
+let mMatrixPilha = [];
+
+// angula de rotacao
+let rFire = 0;
+let rBody = 0;
+let rWings = 0;
+
 // triangulo topo
 let triangleTopVertexPositionBuffer;
 let triangleTopVertexColorBuffer;
@@ -40,7 +48,7 @@ function iniciaWebGL() {
     iniciarShaders();  // Obter e processar os Shaders
     iniciarBuffers();  // Enviar o triângulo e quadrado na GPU
     iniciarAmbiente(); // Definir background e cor do objeto
-    desenharCena();    // Usar os itens anteriores e desenhar
+    tick();            // Desenhar a cena repetidamente
 }
 
 function iniciarGL(canvas) {
@@ -254,6 +262,12 @@ function iniciarAmbiente() {
     gl.enable(gl.DEPTH_TEST);
 }
 
+function tick() {
+    requestAnimFrame(tick);
+    desenharCena();
+    animar();
+}
+
 function desenharCena() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     mat4.perspective(pMatrix, 45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0);
@@ -264,6 +278,9 @@ function desenharCena() {
     let translation = vec3.create();
     vec3.set(translation, 0, 3.2, -7.0);
     mat4.translate(mMatrix, mMatrix, translation);
+
+    mPushMatrix();
+    mat4.rotate(mMatrix, mMatrix, degToRad(rBody), [0, 1, 0]);
 
     // triangulo topo vertices
     gl.bindBuffer(gl.ARRAY_BUFFER, triangleTopVertexPositionBuffer);
@@ -277,11 +294,15 @@ function desenharCena() {
 
     setMatrixUniforms();
     gl.drawArrays(gl.TRIANGLES, 0, triangleTopVertexPositionBuffer.numItems);
+    mPopMatrix();
 
     // Desenhando o corpo do foguete
     for (let i = 0; i < 2; i++) {
         vec3.set(translation, 0.0, -2.1, 0.0);
         mat4.translate(mMatrix, mMatrix, translation);
+
+        mPushMatrix();
+        mat4.rotate(mMatrix, mMatrix, degToRad(rBody), [0, 1, 0]);
 
         // corpo do foguete vertices
         gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
@@ -295,11 +316,15 @@ function desenharCena() {
 
         setMatrixUniforms();
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
+        mPopMatrix();
     }
 
     // desenhando a janela do foguete
     vec3.set(translation, 0, 2.1, 0.01);
     mat4.translate(mMatrix, mMatrix, translation);
+
+    mPushMatrix();
+    mat4.rotate(mMatrix, mMatrix, degToRad(rBody), [0, 1, 0]);
 
     // janela vertices
     gl.bindBuffer(gl.ARRAY_BUFFER, circleVertexPositionBuffer);
@@ -314,8 +339,18 @@ function desenharCena() {
     setMatrixUniforms();
     gl.drawArrays(gl.TRIANGLE_FAN, 0, circleVertexPositionBuffer.numItems);
 
+    mPopMatrix();
+
     // desenhando a asa esquerda do foguete
     vec3.set(translation, -2.1, -2.1, -0.01);
+    mat4.translate(mMatrix, mMatrix, translation);
+
+    mPushMatrix();
+    vec3.set(translation, 2.1, 0, 0);
+    mat4.translate(mMatrix, mMatrix, translation);
+    mat4.rotate(mMatrix, mMatrix, degToRad(-rWings), [0, 1, 0]);
+
+    vec3.set(translation, -2.1, 0, 0);
     mat4.translate(mMatrix, mMatrix, translation);
 
     // asa esquerda do foguete vertices
@@ -348,12 +383,17 @@ function desenharCena() {
     setMatrixUniforms();
     gl.drawArrays(gl.TRIANGLES, 0, triangleBottomRightVertexPositionBuffer.numItems);
 
+    mPopMatrix();
+
     // desenhando o fogo do foguete
-    vec3.set(translation, -3.1, -1.7, 0.0);
+    vec3.set(translation, 0.6, -1.7, 0.0);
     mat4.translate(mMatrix, mMatrix, translation);
     for (let i = 0; i < 4; i++) {
         vec3.set(translation, 0.6, 0, 0.0);
         mat4.translate(mMatrix, mMatrix, translation);
+
+        mPushMatrix();
+        mat4.rotate(mMatrix, mMatrix, degToRad(-rFire), [0, 1, 0]);
 
         // fogo do foguete vertices
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleFireVertexPositionBuffer);
@@ -362,6 +402,7 @@ function desenharCena() {
 
         setMatrixUniforms();
         gl.drawArrays(gl.TRIANGLES, 0, triangleFireVertexPositionBuffer.numItems);
+        mPopMatrix();
     }
 }
 
@@ -369,4 +410,32 @@ function setMatrixUniforms() {
     gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
     gl.uniformMatrix4fv(shaderProgram.vMatrixUniform, false, vMatrix);
     gl.uniformMatrix4fv(shaderProgram.mMatrixUniform, false, mMatrix);
+}
+
+let ultimo = 0;
+function animar() {
+    let agora = new Date().getTime();
+    if (ultimo !== 0) {
+        let diferenca = agora - ultimo;
+        rFire += ((50 * diferenca) / 1000.0) % 360.0;
+        rBody += ((70 * diferenca) / 1000.0) % 360.0;
+        rWings += ((100 * diferenca) / 1000.0) % 360.0;
+    }
+    ultimo = agora;
+}
+
+function degToRad(graus) {
+    return graus * Math.PI / 180;
+}
+
+function mPushMatrix() {
+    let copy = mat4.clone(mMatrix);
+    mMatrixPilha.push(copy);
+}
+
+function mPopMatrix() {
+    if (mMatrixPilha.length === 0) {
+        throw "inválido popMatrix!";
+    }
+    mMatrix = mMatrixPilha.pop();
 }
