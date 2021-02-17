@@ -29,6 +29,7 @@ let triangleFireVertexPositionBuffer;
 // quadrado corpo do foguete
 let squareVertexPositionBuffer;
 let squareVertexColorBuffer;
+let squareVertexIndexBuffer;
 
 // circulo janela foguete
 let circleVertexPositionBuffer;
@@ -128,54 +129,115 @@ function iniciarBuffers() {
     triangleTopVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, triangleTopVertexPositionBuffer);
     let vertices = [
-        0.0, 0.5, 0.0,
-        -1.0, -1.0, 0.0,
-        1.0, -1.0, 0.0
+        // Frente
+        0.0, 1.0, 0.0,
+        -1.0, -1.0, 1.0,
+        1.0, -1.0, 1.0,
+
+        // Direita
+        0.0, 1.0, 0.0,
+        1.0, -1.0, 1.0,
+        1.0, -1.0, -1.0,
+
+        // Trás
+        0.0, 1.0, 0.0,
+        1.0, -1.0, -1.0,
+        -1.0, -1.0, -1.0,
+
+        // Esquerda
+        0.0, 1.0, 0.0,
+        -1.0, -1.0, -1.0,
+        -1.0, -1.0, 1.0
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
     triangleTopVertexPositionBuffer.itemSize = 3;
-    triangleTopVertexPositionBuffer.numItems = 3;
+    triangleTopVertexPositionBuffer.numItems = 12;
 
     // triangulo do topo cores
     triangleTopVertexColorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, triangleTopVertexColorBuffer);
-    let cores = [
-        1.0, 1.0, 0.0, 1.0,
-        1.0, 1.0, 0.0, 1.0,
-        1.0, 1.0, 0.0, 1.0
-    ];
+    let cores = [];
+    for (let i = 0; i < 12; i++) {
+        cores = cores.concat([1.0, 1.0, 0.0, 1.0]);
+    }
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cores), gl.STATIC_DRAW);
     triangleTopVertexColorBuffer.itemSize = 4;
-    triangleTopVertexColorBuffer.numItems = 3;
+    triangleTopVertexColorBuffer.numItems = 12;
 
     // quadrado do corpo vertices
     squareVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
     vertices = [
-        1.0, 1.0, 0.0,
-        -1.0, 1.0, 0.0,
-        1.0, -1.0, 0.0,
-        -1.0, -1.0, 0.0
+        // Frente
+        -1.0, -1.0, 1.0,
+        1.0, -1.0, 1.0,
+        1.0, 1.0, 1.0,
+        -1.0, 1.0, 1.0,
+
+        // Trás
+        -1.0, -1.0, -1.0,
+        -1.0, 1.0, -1.0,
+        1.0, 1.0, -1.0,
+        1.0, -1.0, -1.0,
+
+        // Topo
+        -1.0, 1.0, -1.0,
+        -1.0, 1.0, 1.0,
+        1.0, 1.0, 1.0,
+        1.0, 1.0, -1.0,
+
+        // Base
+        -1.0, -1.0, -1.0,
+        1.0, -1.0, -1.0,
+        1.0, -1.0, 1.0,
+        -1.0, -1.0, 1.0,
+
+        // Direita
+        1.0, -1.0, -1.0,
+        1.0, 1.0, -1.0,
+        1.0, 1.0, 1.0,
+        1.0, -1.0, 1.0,
+
+        // Esquerda
+        -1.0, -1.0, -1.0,
+        -1.0, -1.0, 1.0,
+        -1.0, 1.0, 1.0,
+        -1.0, 1.0, -1.0,
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
     squareVertexPositionBuffer.itemSize = 3;
-    squareVertexPositionBuffer.numItems = 4;
+    squareVertexPositionBuffer.numItems = 24;
 
     // quadrado do corpo cores
     squareVertexColorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexColorBuffer);
-    cores = []
-    for (let i = 0; i < 4; i++) {
+    cores = [];
+    for (let i = 0; i < 24; i++) {
         cores = cores.concat([0.0, 0.0, 1.0, 1.0]);
     }
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cores), gl.STATIC_DRAW);
     squareVertexColorBuffer.itemSize = 4;
-    squareVertexColorBuffer.numItems = 4;
+    squareVertexColorBuffer.numItems = 24;
+
+    // criado os indices para desenhar o cubo
+    squareVertexIndexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, squareVertexIndexBuffer);
+    let indices = [
+        0,  1,  2,  0,  2,  3,          // Frente
+        4,  5,  6,  4,  6,  7,          // Trás
+        8,  9,  10, 8,  10, 11,         // Topo
+        12, 13, 14, 12, 14, 15,         // Base
+        16, 17, 18, 16, 18, 19,         // Direita
+        20, 21, 22, 20, 22, 23          // Esquerda
+    ];
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
+    squareVertexIndexBuffer.itemSize = 1;
+    squareVertexIndexBuffer.numItems = 36;
 
     // circulo da janela vertices
     circleVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, circleVertexPositionBuffer)
-    let retas = []
+    let retas = [];
     let radius = 0.8;
     let qtd_vertices = 25;
     for (let i = 0; i < 2 * Math.PI; i += 2 * Math.PI / qtd_vertices) {
@@ -188,7 +250,7 @@ function iniciarBuffers() {
     // circulo da janela cores
     circleVertexColorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, circleVertexColorBuffer);
-    cores = []
+    cores = [];
     for (let i = 0; i < retas.length / 3; i++) {
         cores = cores.concat([1.0, 1.0, 1.0, 1.0]);
     }
@@ -200,22 +262,37 @@ function iniciarBuffers() {
     triangleBottomLeftVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, triangleBottomLeftVertexPositionBuffer);
     vertices = [
-        1.0, 0.5, 0.0,
+        // Frente
         -0.5, -1.0, 0.0,
-        1.0, -1.0, 0.0
+        1.0, 1.0, 1.0,
+        1.0, -1.0, 1.0,
+
+        // Direita
+        -0.5, -1.0, 0.0,
+        1.0, -1.0, 1.0,
+        1.0, -1.0, -1.0,
+
+        // Trás
+        -0.5, -1.0, 0.0,
+        1.0, 1.0, -1.0,
+        1.0, -1.0, -1.0,
+
+        // Esquerda
+        -0.5, -1.0, 0.0,
+        1.0, 1.0, -1.0,
+        1.0, 1.0, 1.0
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
     triangleBottomLeftVertexPositionBuffer.itemSize = 3;
-    triangleBottomLeftVertexPositionBuffer.numItems = 3;
+    triangleBottomLeftVertexPositionBuffer.numItems = 12;
 
     // triangulo asa esquerda cores
     triangleBottomLeftVertexColorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, triangleBottomLeftVertexColorBuffer);
-    cores = [
-        1.0, 0.0, 0.0, 1.0,
-        1.0, 0.0, 0.0, 1.0,
-        1.0, 0.0, 0.0, 1.0
-    ];
+    cores = [];
+    for (let i = 0; i < 12; i++) {
+        cores = cores.concat([1.0, 0.0, 0.0, 1.0,]);
+    }
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cores), gl.STATIC_DRAW);
     triangleBottomLeftVertexColorBuffer.itemSize = 4;
     triangleBottomLeftVertexColorBuffer.numItems = 3;
@@ -224,22 +301,37 @@ function iniciarBuffers() {
     triangleBottomRightVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, triangleBottomRightVertexPositionBuffer);
     vertices = [
-        -0.5, 0.5, 0.0,
-        -0.5, -1.0, 0.0,
-        1.0, -1.0, 0.0
+        // Frente
+        0.5, -1.0, 0.0,
+        -1.0, 1.0, 1.0,
+        -1.0, -1.0, 1.0,
+
+        // Direita
+        0.5, -1.0, 0.0,
+        -1.0, -1.0, 1.0,
+        -1.0, -1.0, -1.0,
+
+        // Trás
+        0.5, -1.0, 0.0,
+        -1.0, 1.0, -1.0,
+        -1.0, -1.0, -1.0,
+
+        // Esquerda
+        0.5, -1.0, 0.0,
+        -1.0, 1.0, -1.0,
+        -1.0, 1.0, 1.0
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
     triangleBottomRightVertexPositionBuffer.itemSize = 3;
-    triangleBottomRightVertexPositionBuffer.numItems = 3;
+    triangleBottomRightVertexPositionBuffer.numItems = 12;
 
     // triangulo asa direita cores
     triangleBottomRightVertexColorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, triangleBottomRightVertexColorBuffer);
-    cores = [
-        1.0, 0.0, 0.0, 1.0,
-        1.0, 0.0, 0.0, 1.0,
-        1.0, 0.0, 0.0, 1.0
-    ];
+    cores = [];
+    for (let i = 0; i < 12; i++) {
+        cores = cores.concat([0.0, 1.0, 0.0, 1.0]);
+    }
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cores), gl.STATIC_DRAW);
     triangleBottomRightVertexColorBuffer.itemSize = 4;
     triangleBottomRightVertexColorBuffer.numItems = 3;
@@ -248,13 +340,29 @@ function iniciarBuffers() {
     triangleFireVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, triangleFireVertexPositionBuffer);
     vertices = [
+        // Frente
         0.0, 0.5, 0.0,
-        -0.25, -1.0, 0.0,
-        0.25, -1.0, 0.0
+        -0.20, -0.5, 0.20,
+        0.20, -0.5, 0.20,
+
+        // Direita
+        0.0, 0.5, 0.0,
+        0.20, -0.5, 0.20,
+        0.20, -0.5, -0.20,
+
+        // Trás
+        0.0, 0.5, 0.0,
+        0.20, -0.5, -0.20,
+        -0.20, -0.5, -0.20,
+
+        // Esquerda
+        0.0, 0.5, 0.0,
+        -0.20, -0.5, -0.20,
+        -0.20, -0.5, 0.20
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
     triangleFireVertexPositionBuffer.itemSize = 3;
-    triangleFireVertexPositionBuffer.numItems = 3;
+    triangleFireVertexPositionBuffer.numItems = 12;
 }
 
 function iniciarAmbiente() {
@@ -276,7 +384,7 @@ function desenharCena() {
 
     // Desenhando Triângulo do topo
     let translation = vec3.create();
-    vec3.set(translation, 0, 3.2, -7.0);
+    vec3.set(translation, 0, 2.7, -7.0);
     mat4.translate(mMatrix, mMatrix, translation);
 
     mPushMatrix();
@@ -309,22 +417,32 @@ function desenharCena() {
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,
             squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
+        // corpo do foguete indices
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, squareVertexIndexBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,
+            squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
         // corpo do foguete cores
         gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexColorBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexColorAttribute,
             squareVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
         setMatrixUniforms();
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
+        gl.drawElements(gl.TRIANGLES, squareVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
         mPopMatrix();
     }
 
     // desenhando a janela do foguete
-    vec3.set(translation, 0, 2.1, 0.01);
+    vec3.set(translation, 0, 2.1, 1.01);
     mat4.translate(mMatrix, mMatrix, translation);
 
     mPushMatrix();
+    vec3.set(translation, 0, 0, -1.01);
+    mat4.translate(mMatrix, mMatrix, translation);
     mat4.rotate(mMatrix, mMatrix, degToRad(rBody), [0, 1, 0]);
+
+    vec3.set(translation, 0, 0, 1.01);
+    mat4.translate(mMatrix, mMatrix, translation);
 
     // janela vertices
     gl.bindBuffer(gl.ARRAY_BUFFER, circleVertexPositionBuffer);
@@ -342,13 +460,13 @@ function desenharCena() {
     mPopMatrix();
 
     // desenhando a asa esquerda do foguete
-    vec3.set(translation, -2.1, -2.1, -0.01);
+    vec3.set(translation, -2.1, -2.1, -1.01);
     mat4.translate(mMatrix, mMatrix, translation);
 
     mPushMatrix();
     vec3.set(translation, 2.1, 0, 0);
     mat4.translate(mMatrix, mMatrix, translation);
-    mat4.rotate(mMatrix, mMatrix, degToRad(-rWings), [0, 1, 0]);
+    mat4.rotate(mMatrix, mMatrix, degToRad(rBody), [0, 1, 0]);
 
     vec3.set(translation, -2.1, 0, 0);
     mat4.translate(mMatrix, mMatrix, translation);
@@ -367,7 +485,7 @@ function desenharCena() {
     gl.drawArrays(gl.TRIANGLES, 0, triangleBottomLeftVertexPositionBuffer.numItems);
 
     // desenhando a asa direita do foguete
-    vec3.set(translation, 3.7, 0, 0.0);
+    vec3.set(translation, 4.2, 0, 0.0);
     mat4.translate(mMatrix, mMatrix, translation);
 
     // asa direita do foguete vertices
