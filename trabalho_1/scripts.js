@@ -14,6 +14,14 @@ let rWings = 0;
 // shader
 let shaderProgram;
 
+// coordenada z do cubo (controle com pageDown/PageUp)
+let camZ = -8.0;
+let camX = 2.7;
+let camY = 0.0;
+
+// monitorar o estado das teclas e as funções de evento do teclado
+let teclasPressionadas = {};
+
 // Iniciar o ambiente quando a página for carregada
 $(function () {
     iniciaWebGL();
@@ -25,6 +33,11 @@ function iniciaWebGL() {
     iniciarShaders();  // Obter e processar os Shaders
     iniciarBuffers();  // Enviar o triângulo e quadrado na GPU
     iniciarAmbiente(); // Definir background e cor do objeto
+
+    // funções que tratam eventos de teclado
+    document.onkeydown = eventoTeclaPress;
+    document.onkeyup = eventoTeclaSolta;
+
     tick();            // Desenhar a cena repetidamente
 }
 
@@ -116,6 +129,7 @@ function iniciarAmbiente() {
 
 function tick() {
     requestAnimFrame(tick);
+    tratarTeclado();
     desenharCena();
     animar();
 }
@@ -128,7 +142,7 @@ function desenharCena() {
 
     // Desenhando Triângulo do topo
     let translation = vec3.create();
-    vec3.set(translation, 0, 2.7, -7.0);
+    vec3.set(translation, camX, camY, camZ);
     mat4.translate(mMatrix, mMatrix, translation);
 
     desenhaCenaTopo();
@@ -238,4 +252,41 @@ function mPopMatrix() {
         throw "inválido popMatrix!";
     }
     mMatrix = mMatrixPilha.pop();
+}
+
+function eventoTeclaPress(evento) {
+    teclasPressionadas[evento.keyCode] = true;
+}
+
+function eventoTeclaSolta(evento) {
+    teclasPressionadas[evento.keyCode] = false;
+}
+
+// A função simplesmente checa se antes de desenhar, a tecla está pressionada.
+// Se estiver, atualizamos as variáveis
+function tratarTeclado() {
+    // Page Up
+    if (teclasPressionadas[33]) {
+        camZ -= 0.05;
+    }
+    // Page Down
+    if (teclasPressionadas[34]) {
+        camZ += 0.05;
+    }
+    // a
+    if (teclasPressionadas[65]) {
+        camX -= 0.05;
+    }
+    // s
+    if (teclasPressionadas[83]) {
+        camY -= 0.05;
+    }
+    // d
+    if (teclasPressionadas[68]) {
+        camX += 0.05;
+    }
+    // w
+    if (teclasPressionadas[87]) {
+        camY += 0.05;
+    }
 }
