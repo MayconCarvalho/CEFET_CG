@@ -3,17 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title></title>
-  <style>
-      body {
-          background-color: darkgrey;
-      }
-      .center {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-      }
-  </style>
+  <link rel="stylesheet" href="styles.css">
+
   <script type="text/javascript" src="../libs/gl-matrix-min.js"></script>
   <script type="text/javascript" src="../libs/jquery.min.js"></script>
   <script type="text/javascript" src="../libs/webgl-utils.js"></script>
@@ -51,12 +42,27 @@
   </script>
 </head>
 <body>
+<h1>Trabalho 1 - Desenhando uma figura</h1>
 <div class="center">
   <canvas id="canvas-webgl"
           width="600px"
           height="600px"
           style="border:none">
   </canvas>
+</div>
+<div>
+  <h2>Teclas ativas no desenho ao lado</h2>
+  <p>- Tecla page up move a o foguete para trás (aumenta o Z)</p>
+  <p>- Tecla page down move a o foguete para frente (diminui o Z)</p>
+  <p>- Tecla A move a o foguete para esquerda (diminui o X)</p>
+  <p>- Tecla D move a o foguete para direita (aumenta o X)</p>
+  <p>- Tecla S move a o foguete para baixo (diminui o Y)</p>
+  <p>- Tecla W move a o foguete para cima (aumenta o Y)</p>
+</div>
+
+<div style="margin-top: 30px">
+  <h2>Imagem usada para inspirar a figura ao lado</h2>
+  <img src="../pre-1.jpg" alt="imagem de inspiração">
 </div>
 </body>
 </html>

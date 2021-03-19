@@ -7,7 +7,9 @@
 5. Link para Prática 06 CG: [Texturas](tutorial/05_texturas/licao05.html)
 6. Link para Prática 07 CG: [Filtro de teclado](tutorial/06_filtro_teclado/licao06.html)
 
-## Imagem
+## Trabalho 1 - Desenhando uma figura
+
+O resultado da figura desenhando: [link do resultado](trabalho_1/trabalho.html)
 
 Imagem escolhida de inspiração para Fase 1:
 
