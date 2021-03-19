@@ -44,6 +44,8 @@ function iniciaBuffersAsaEsquerda() {
 }
 
 function desenhaCenaAsaEsquerda() {
+    mat4.rotate(mMatrix, mMatrix, degToRad(rWings), [1, 0, 0]);
+
     // asa esquerda do foguete vertices
     gl.bindBuffer(gl.ARRAY_BUFFER, triangleBottomLeftVertexPositionBuffer);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,

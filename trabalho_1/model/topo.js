@@ -44,8 +44,6 @@ function iniciaBuffersTopo() {
 }
 
 function desenhaCenaTopo() {
-    mat4.rotate(mMatrix, mMatrix, degToRad(rBody), [0, 1, 0]);
-
     // triangulo topo vertices
     gl.bindBuffer(gl.ARRAY_BUFFER, triangleTopVertexPositionBuffer);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,

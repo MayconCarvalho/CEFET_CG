@@ -131,11 +131,7 @@ function desenharCena() {
     vec3.set(translation, 0, 2.7, -7.0);
     mat4.translate(mMatrix, mMatrix, translation);
 
-    mPushMatrix();
-
     desenhaCenaTopo();
-
-    mPopMatrix();
 
     // Desenhando o corpo do foguete
     for (let i = 0; i < 2; i++) {
@@ -175,25 +171,37 @@ function desenharCena() {
 
     vec3.set(translation, -2.1, 0, 0);
     mat4.translate(mMatrix, mMatrix, translation);
+    mPushMatrix();
+
     desenhaCenaAsaEsquerda();
+
+    mPopMatrix();
 
     // desenhando a asa direita do foguete
     vec3.set(translation, 4.2, 0, 0.0);
     mat4.translate(mMatrix, mMatrix, translation);
+    mPushMatrix()
+
     desenhaCenaAsaDireita();
 
     mPopMatrix();
 
-    // desenhando o fogo do foguete
-    vec3.set(translation, 0.6, -1.7, 0.0);
-    mat4.translate(mMatrix, mMatrix, translation);
-    for (let i = 0; i < 4; i++) {
-        vec3.set(translation, 0.6, 0, 0.0);
-        mat4.translate(mMatrix, mMatrix, translation);
+    mPopMatrix();
 
-        mPushMatrix();
-        desenhaCenaFogo();
-        mPopMatrix();
+    // desenhando o fogo do foguete
+    vec3.set(translation, 0.6, -2.2, 0.0);
+    mat4.translate(mMatrix, mMatrix, translation);
+    for (let j = 0; j < 2; j++) {
+        for (let i = 0; i < 4; i++) {
+            vec3.set(translation, 0.6, 0, 0.0);
+            mat4.translate(mMatrix, mMatrix, translation);
+
+            mPushMatrix();
+            desenhaCenaFogo();
+            mPopMatrix();
+        }
+        vec3.set(translation, -0.6 * 4, 0.0, -1.0);
+        mat4.translate(mMatrix, mMatrix, translation);
     }
 }
 
