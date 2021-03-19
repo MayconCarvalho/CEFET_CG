@@ -2,6 +2,9 @@
 let triangleBottomRightVertexPositionBuffer;
 let triangleBottomRightVertexColorBuffer;
 
+// angula de rotacao
+let rWingsRight = 0;
+
 function iniciaBuffersAsaDireita() {
     // triangulo asa direita vertices
     triangleBottomRightVertexPositionBuffer = gl.createBuffer();
@@ -44,7 +47,7 @@ function iniciaBuffersAsaDireita() {
 }
 
 function desenhaCenaAsaDireita() {
-    mat4.rotate(mMatrix, mMatrix, degToRad(rWings), [1, 0, 0]);
+    mat4.rotate(mMatrix, mMatrix, degToRad(rWingsRight), [1, 0, 0]);
 
     // asa direita do foguete vertices
     gl.bindBuffer(gl.ARRAY_BUFFER, triangleBottomRightVertexPositionBuffer);

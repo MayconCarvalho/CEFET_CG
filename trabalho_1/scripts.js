@@ -6,18 +6,13 @@ let pMatrix = mat4.create();
 // pilha
 let mMatrixPilha = [];
 
-// angula de rotacao
-let rFire = 0;
-let rBody = 0;
-let rWings = 0;
-
 // shader
 let shaderProgram;
 
 // coordenada z do cubo (controle com pageDown/PageUp)
 let camZ = -8.0;
-let camX = 2.7;
-let camY = 0.0;
+let camY = 3.0;
+let camX = 0.7;
 
 // monitorar o estado das teclas e as funções de evento do teclado
 let teclasPressionadas = {};
@@ -233,7 +228,8 @@ function animar() {
         let diferenca = agora - ultimo;
         rFire += ((50 * diferenca) / 1000.0) % 360.0;
         rBody += ((70 * diferenca) / 1000.0) % 360.0;
-        rWings += ((100 * diferenca) / 1000.0) % 360.0;
+        rWingsLeft += ((100 * diferenca) / 1000.0) % 360.0;
+        rWingsRight += ((150 * diferenca) / 1000.0) % 360.0;
     }
     ultimo = agora;
 }

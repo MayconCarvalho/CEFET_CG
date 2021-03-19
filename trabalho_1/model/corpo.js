@@ -3,6 +3,9 @@ let squareVertexPositionBuffer;
 let squareVertexColorBuffer;
 let squareVertexIndexBuffer;
 
+// angula de rotacao
+let rBody = 0;
+
 function iniciaBuffersCorpo() {
     // quadrado do corpo vertices
     squareVertexPositionBuffer = gl.createBuffer();

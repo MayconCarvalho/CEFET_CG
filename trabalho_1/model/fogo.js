@@ -2,6 +2,9 @@
 let triangleFireVertexPositionBuffer;
 let triangleFireVertexColorBuffer;
 
+// angula de rotacao
+let rFire = 0;
+
 function iniciaBuffersFogo() {
     // triangulo dos fogos vertices
     triangleFireVertexPositionBuffer = gl.createBuffer();
